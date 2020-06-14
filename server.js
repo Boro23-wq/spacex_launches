@@ -1,15 +1,26 @@
-const express = require("express");
-const graphqlHTTP = require("express-graphql");
+const express = require('express');
+const graphqlHTTP = require('express-graphql');
+const cors = require('cors');
 const schema = require('./schema');
+const path = require('path');
 
 const app = express();
+
+//Cross Origin
+app.use(cors());
+
 app.use(
-  "/graphql",
+  '/graphql',
   graphqlHTTP({
     schema,
     graphiql: true,
   })
 );
+
+app.use(express.static('public'));
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
+});
 
 const PORT = process.env.port || 5000;
 
